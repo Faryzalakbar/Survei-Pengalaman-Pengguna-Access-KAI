@@ -41,6 +41,7 @@ app.post('/api/responses', (req, res) => {
             data: req.body
         };
         
+        console.log('Menerima data survei baru:', newResponse);
         data.push(newResponse);
         fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
         

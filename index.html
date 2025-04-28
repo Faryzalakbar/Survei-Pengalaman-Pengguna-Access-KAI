@@ -675,9 +675,14 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(surveyData),
+                    body: JSON.stringify({
+                        // Pastikan format data sesuai dengan yang diharapkan server
+                        // Server mengharapkan data langsung, bukan dalam objek data
+                        ...surveyData
+                    }),
                     // Tambahkan timeout untuk menghindari permintaan yang terlalu lama
-                    signal: AbortSignal.timeout(10000) // timeout setelah 10 detik
+                    signal: AbortSignal.timeout(10000), // timeout setelah 10 detik
+                    credentials: 'same-origin' // Pastikan cookie dikirim jika diperlukan
                 })
                 .then(response => {
                     if (!response.ok) {

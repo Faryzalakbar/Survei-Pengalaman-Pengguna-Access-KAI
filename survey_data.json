@@ -20,5 +20,27 @@
       "frequency": "monthly",
       "email": "muhammadfarizalakbar@gmail.com"
     }
+  },
+  {
+    "id": 1745807577126,
+    "timestamp": "2025-04-28T02:32:57.126Z",
+    "data": {
+      "happiness_1": "2",
+      "happiness_2": "3",
+      "engagement_1": "2",
+      "engagement_2": "3",
+      "adoption_1": "2",
+      "adoption_2": "3",
+      "retention_1": "2",
+      "retention_2": "3",
+      "task_1": "2",
+      "task_2": "3",
+      "feedback_like": "xx",
+      "feedback_improve": "xxx",
+      "age": "25-34",
+      "gender": "male",
+      "frequency": "weekly",
+      "email": "farizal@gmail.com"
+    }
   }
 ]
