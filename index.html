@@ -657,43 +657,60 @@
                 surveyData[key] = value;
             }
             
-            // Send data to server
-            fetch('http://localhost:3000/api/responses', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(surveyData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Success:', data);
-                
-                // Also store in localStorage as backup
+            // Simpan data di localStorage terlebih dahulu sebagai backup
+            try {
+                const responseId = Date.now();
+                const timestamp = new Date().toISOString();
                 const existingData = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
                 existingData.push({
-                    id: data.id,
-                    timestamp: data.timestamp,
+                    id: responseId,
+                    timestamp: timestamp,
                     data: surveyData
                 });
                 localStorage.setItem('surveyResponses', JSON.stringify(existingData));
                 
-                // Show thank you message
-                document.getElementById('surveyForm').style.display = 'none';
-                document.getElementById('thankYou').style.display = 'block';
-                
-                // Scroll to thank you message
-                document.getElementById('thankYou').scrollIntoView({behavior: 'smooth'});
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan saat mengirim data. Silakan coba lagi.');
-            });
+                // Coba kirim data ke server
+                fetch('http://localhost:3000/api/responses', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(surveyData),
+                    // Tambahkan timeout untuk menghindari permintaan yang terlalu lama
+                    signal: AbortSignal.timeout(10000) // timeout setelah 10 detik
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Server merespon dengan status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Success:', data);
+                    
+                    // Show thank you message
+                    document.getElementById('surveyForm').style.display = 'none';
+                    document.getElementById('thankYou').style.display = 'block';
+                    
+                    // Scroll to thank you message
+                    document.getElementById('thankYou').scrollIntoView({behavior: 'smooth'});
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    
+                    // Tampilkan pesan sukses meskipun gagal mengirim ke server
+                    // karena data sudah tersimpan di localStorage
+                    document.getElementById('surveyForm').style.display = 'none';
+                    document.getElementById('thankYou').style.display = 'block';
+                    document.getElementById('thankYou').scrollIntoView({behavior: 'smooth'});
+                    
+                    // Tampilkan notifikasi bahwa data disimpan secara lokal
+                    alert('Data survei Anda telah disimpan secara lokal. Server mungkin sedang tidak tersedia.');
+                });
+            } catch (error) {
+                console.error('Error saat menyimpan data:', error);
+                alert('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+            }
         });
         
         // Function to export survey data to CSV
