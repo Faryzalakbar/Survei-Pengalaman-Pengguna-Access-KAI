@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survei Pengalaman Pengguna Access KAI - HEART Framework</title>
+    <style>
+        :root {
+            --primary: #0066b2;
+            --primary-dark: #00549e;
+            --secondary: #f37021;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #e63946;
+            --gray: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        header:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--secondary);
+        }
+        
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .logo {
+            width: 120px;
+            margin-bottom: 15px;
+        }
+        
+        .intro {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .heart-definition {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .heart-definition h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .heart-definition h3 span {
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .heart-definition ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        .heart-definition li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .heart-definition li:before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .survey-form {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .category {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .category:last-of-type {
+            border-bottom: none;
+        }
+        
+        .category h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+        
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .question p {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .rating {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .rating input[type="radio"] {
+            display: none;
+        }
+        
+        .rating label {
+            display: inline-block;
+            width: 50px;
+            text-align: center;
+            padding: 10px 0;
+            background: #e9ecef;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .rating label:hover {
+            background: #dae0e5;
+        }
+        
+        .rating input[type="radio"]:checked + label {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .scale-legend {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 15px;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .demographic {
+            margin-bottom: 15px;
+        }
+        
+        .demographic label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .demographic select, .demographic input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        button[type="submit"] {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .thank-you {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .thank-you h2 {
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+        
+        .thank-you p {
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            header {
+                padding: 20px 0;
+            }
+            
+            header h1 {
+                font-size: 1.7rem;
+            }
+            
+            .rating {
+                flex-wrap: wrap;
+            }
+            
+            .rating label {
+                width: 45px;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="https://kai.id/static/images/logo.png" alt="Logo KAI" class="logo">
+            <h1>Survei Pengalaman Pengguna Access KAI</h1>
+            <p>Bantu kami meningkatkan layanan dengan mengisi survei singkat ini</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="intro">
+            <h2>Selamat Datang di Survei Pengalaman Pengguna Access KAI</h2>
+            <p>Terima kasih telah meluangkan waktu untuk berpartisipasi dalam survei ini. Pendapat Anda sangat berharga bagi kami untuk terus meningkatkan kualitas layanan Access KAI. Survei ini akan memakan waktu sekitar 5-10 menit.</p>
+        </div>
+        
+        <div class="heart-definition">
+            <h2>Tentang HEART Framework</h2>
+            <p>Survei ini menggunakan HEART Framework yang dikembangkan oleh Google untuk mengukur pengalaman pengguna:</p>
+            
+            <h3><span>H</span>Happiness (Kebahagiaan)</h3>
+            <ul>
+                <li>Mengukur tingkat kepuasan dan kesenangan pengguna terhadap aplikasi</li>
+                <li>Berfokus pada aspek emosional dari pengalaman pengguna</li>
+            </ul>
+            
+            <h3><span>E</span>Engagement (Keterlibatan)</h3>
+            <ul>
+                <li>Mengukur seberapa sering dan dalam pengguna berinteraksi dengan aplikasi</li>
+                <li>Menilai tingkat keterlibatan pengguna dengan fitur-fitur yang tersedia</li>
+            </ul>
+            
+            <h3><span>A</span>Adoption (Adopsi)</h3>
+            <ul>
+                <li>Mengukur seberapa banyak pengguna baru yang menggunakan aplikasi</li>
+                <li>Menilai kemudahan pengguna dalam mengadopsi fitur baru</li>
+            </ul>
+            
+            <h3><span>R</span>Retention (Retensi)</h3>
+            <ul>
+                <li>Mengukur seberapa banyak pengguna yang kembali menggunakan aplikasi</li>
+                <li>Menilai loyalitas pengguna terhadap aplikasi</li>
+            </ul>
+            
+            <h3><span>T</span>Task Success (Keberhasilan Tugas)</h3>
+            <ul>
+                <li>Mengukur kemudahan pengguna dalam menyelesaikan tugas di aplikasi</li>
+                <li>Menilai efisiensi dan efektivitas aplikasi dalam membantu pengguna</li>
+            </ul>
+        </div>
+        
+        <form id="surveyForm" class="survey-form">
+            <!-- Happiness Category -->
+            <div class="category">
+                <h3>Happiness (Kebahagiaan)</h3>
+                
+                <div class="question">
+                    <p>1. Seberapa puas Anda dengan pengalaman keseluruhan menggunakan aplikasi Access KAI?</p>
+                    <div class="rating">
+                        <input type="radio" name="happiness_1" id="h1_1" value="1" required>
+                        <label for="h1_1">1</label>
+                        <input type="radio" name="happiness_1" id="h1_2" value="2">
+                        <label for="h1_2">2</label>
+                        <input type="radio" name="happiness_1" id="h1_3" value="3">
+                        <label for="h1_3">3</label>
+                        <input type="radio" name="happiness_1" id="h1_4" value="4">
+                        <label for="h1_4">4</label>
+                        <input type="radio" name="happiness_1" id="h1_5" value="5">
+                        <label for="h1_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Tidak Puas</span>
+                        <span>Sangat Puas</span>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p>2. Seberapa menyenangkan menggunakan aplikasi Access KAI?</p>
+                    <div class="rating">
+                        <input type="radio" name="happiness_2" id="h2_1" value="1" required>
+                        <label for="h2_1">1</label>
+                        <input type="radio" name="happiness_2" id="h2_2" value="2">
+                        <label for="h2_2">2</label>
+                        <input type="radio" name="happiness_2" id="h2_3" value="3">
+                        <label for="h2_3">3</label>
+                        <input type="radio" name="happiness_2" id="h2_4" value="4">
+                        <label for="h2_4">4</label>
+                        <input type="radio" name="happiness_2" id="h2_5" value="5">
+                        <label for="h2_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Tidak Menyenangkan</span>
+                        <span>Sangat Menyenangkan</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Engagement Category -->
+            <div class="category">
+                <h3>Engagement (Keterlibatan)</h3>
+                
+                <div class="question">
+                    <p>3. Seberapa sering Anda menggunakan aplikasi Access KAI?</p>
+                    <div class="rating">
+                        <input type="radio" name="engagement_1" id="e1_1" value="1" required>
+                        <label for="e1_1">1</label>
+                        <input type="radio" name="engagement_1" id="e1_2" value="2">
+                        <label for="e1_2">2</label>
+                        <input type="radio" name="engagement_1" id="e1_3" value="3">
+                        <label for="e1_3">3</label>
+                        <input type="radio" name="engagement_1" id="e1_4" value="4">
+                        <label for="e1_4">4</label>
+                        <input type="radio" name="engagement_1" id="e1_5" value="5">
+                        <label for="e1_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Jarang</span>
+                        <span>Sangat Sering</span>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p>4. Seberapa banyak fitur aplikasi Access KAI yang Anda gunakan?</p>
+                    <div class="rating">
+                        <input type="radio" name="engagement_2" id="e2_1" value="1" required>
+                        <label for="e2_1">1</label>
+                        <input type="radio" name="engagement_2" id="e2_2" value="2">
+                        <label for="e2_2">2</label>
+                        <input type="radio" name="engagement_2" id="e2_3" value="3">
+                        <label for="e2_3">3</label>
+                        <input type="radio" name="engagement_2" id="e2_4" value="4">
+                        <label for="e2_4">4</label>
+                        <input type="radio" name="engagement_2" id="e2_5" value="5">
+                        <label for="e2_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Sedikit</span>
+                        <span>Sangat Banyak</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Adoption Category -->
+            <div class="category">
+                <h3>Adoption (Adopsi)</h3>
+                
+                <div class="question">
+                    <p>5. Seberapa mudah bagi Anda untuk mulai menggunakan aplikasi Access KAI?</p>
+                    <div class="rating">
+                        <input type="radio" name="adoption_1" id="a1_1" value="1" required>
+                        <label for="a1_1">1</label>
+                        <input type="radio" name="adoption_1" id="a1_2" value="2">
+                        <label for="a1_2">2</label>
+                        <input type="radio" name="adoption_1" id="a1_3" value="3">
+                        <label for="a1_3">3</label>
+                        <input type="radio" name="adoption_1" id="a1_4" value="4">
+                        <label for="a1_4">4</label>
+                        <input type="radio" name="adoption_1" id="a1_5" value="5">
+                        <label for="a1_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Sulit</span>
+                        <span>Sangat Mudah</span>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p>6. Seberapa cepat Anda dapat memahami fitur-fitur baru yang ditambahkan ke aplikasi?</p>
+                    <div class="rating">
+                        <input type="radio" name="adoption_2" id="a2_1" value="1" required>
+                        <label for="a2_1">1</label>
+                        <input type="radio" name="adoption_2" id="a2_2" value="2">
+                        <label for="a2_2">2</label>
+                        <input type="radio" name="adoption_2" id="a2_3" value="3">
+                        <label for="a2_3">3</label>
+                        <input type="radio" name="adoption_2" id="a2_4" value="4">
+                        <label for="a2_4">4</label>
+                        <input type="radio" name="adoption_2" id="a2_5" value="5">
+                        <label for="a2_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Lambat</span>
+                        <span>Sangat Cepat</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Retention Category -->
+            <div class="category">
+                <h3>Retention (Retensi)</h3>
+                
+                <div class="question">
+                    <p>7. Seberapa besar kemungkinan Anda akan terus menggunakan aplikasi Access KAI di masa depan?</p>
+                    <div class="rating">
+                        <input type="radio" name="retention_1" id="r1_1" value="1" required>
+                        <label for="r1_1">1</label>
+                        <input type="radio" name="retention_1" id="r1_2" value="2">
+                        <label for="r1_2">2</label>
+                        <input type="radio" name="retention_1" id="r1_3" value="3">
+                        <label for="r1_3">3</label>
+                        <input type="radio" name="retention_1" id="r1_4" value="4">
+                        <label for="r1_4">4</label>
+                        <input type="radio" name="retention_1" id="r1_5" value="5">
+                        <label for="r1_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Tidak Mungkin</span>
+                        <span>Sangat Mungkin</span>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p>8. Seberapa besar kemungkinan Anda akan merekomendasikan aplikasi Access KAI kepada orang lain?</p>
+                    <div class="rating">
+                        <input type="radio" name="retention_2" id="r2_1" value="1" required>
+                        <label for="r2_1">1</label>
+                        <input type="radio" name="retention_2" id="r2_2" value="2">
+                        <label for="r2_2">2</label>
+                        <input type="radio" name="retention_2" id="r2_3" value="3">
+                        <label for="r2_3">3</label>
+                        <input type="radio" name="retention_2" id="r2_4" value="4">
+                        <label for="r2_4">4</label>
+                        <input type="radio" name="retention_2" id="r2_5" value="5">
+                        <label for="r2_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Tidak Mungkin</span>
+                        <span>Sangat Mungkin</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Task Success Category -->
+            <div class="category">
+                <h3>Task Success (Keberhasilan Tugas)</h3>
+                
+                <div class="question">
+                    <p>9. Seberapa mudah bagi Anda untuk memesan tiket kereta api melalui aplikasi Access KAI?</p>
+                    <div class="rating">
+                        <input type="radio" name="task_1" id="t1_1" value="1" required>
+                        <label for="t1_1">1</label>
+                        <input type="radio" name="task_1" id="t1_2" value="2">
+                        <label for="t1_2">2</label>
+                        <input type="radio" name="task_1" id="t1_3" value="3">
+                        <label for="t1_3">3</label>
+                        <input type="radio" name="task_1" id="t1_4" value="4">
+                        <label for="t1_4">4</label>
+                        <input type="radio" name="task_1" id="t1_5" value="5">
+                        <label for="t1_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Sulit</span>
+                        <span>Sangat Mudah</span>
+                    </div>
+                </div>
+                
+                <div class="question">
+                    <p>10. Seberapa efisien aplikasi Access KAI dalam membantu Anda menyelesaikan tugas yang Anda inginkan?</p>
+                    <div class="rating">
+                        <input type="radio" name="task_2" id="t2_1" value="1" required>
+                        <label for="t2_1">1</label>
+                        <input type="radio" name="task_2" id="t2_2" value="2">
+                        <label for="t2_2">2</label>
+                        <input type="radio" name="task_2" id="t2_3" value="3">
+                        <label for="t2_3">3</label>
+                        <input type="radio" name="task_2" id="t2_4" value="4">
+                        <label for="t2_4">4</label>
+                        <input type="radio" name="task_2" id="t2_5" value="5">
+                        <label for="t2_5">5</label>
+                    </div>
+                    <div class="scale-legend">
+                        <span>Sangat Tidak Efisien</span>
+                        <span>Sangat Efisien</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Open Feedback -->
+            <div class="category">
+                <h3>Masukan Tambahan</h3>
+                
+                <div class="question">
+                    <p>11. Apa yang Anda sukai dari aplikasi Access KAI?</p>
+                    <textarea name="feedback_like" rows="4" placeholder="Tuliskan pendapat Anda di sini..."></textarea>
+                </div>
+                
+                <div class="question">
+                    <p>12. Apa yang perlu ditingkatkan dari aplikasi Access KAI?</p>
+                    <textarea name="feedback_improve" rows="4" placeholder="Tuliskan saran Anda di sini..."></textarea>
+                </div>
+            </div>
+            
+            <!-- Demographic Information -->
+            <div class="category">
+                <h3>Informasi Demografis</h3>
+                
+                <div class="demographic">
+                    <label for="age">Usia</label>
+                    <select id="age" name="age" required>
+                        <option value="" disabled selected>Pilih rentang usia</option>
+                        <option value="<18">Di bawah 18 tahun</option>
+                        <option value="18-24">18-24 tahun</option>
+                        <option value="25-34">25-34 tahun</option>
+                        <option value="35-44">35-44 tahun</option>
+                        <option value="45-54">45-54 tahun</option>
+                        <option value="55+">55 tahun ke atas</option>
+                    </select>
+                </div>
+                
+                <div class="demographic">
+                    <label for="gender">Jenis Kelamin</label>
+                    <select id="gender" name="gender" required>
+                        <option value="" disabled selected>Pilih jenis kelamin</option>
+                        <option value="male">Laki-laki</option>
+                        <option value="female">Perempuan</option>
+                        <option value="other">Lainnya</option>
+                        <option value="prefer_not_to_say">Lebih baik tidak menjawab</option>
+                    </select>
+                </div>
+                
+                <div class="demographic">
+                    <label for="frequency">Seberapa sering Anda menggunakan layanan KAI?</label>
+                    <select id="frequency" name="frequency" required>
+                        <option value="" disabled selected>Pilih frekuensi</option>
+                        <option value="daily">Setiap hari</option>
+                        <option value="weekly">Beberapa kali seminggu</option>
+                        <option value="monthly">Beberapa kali sebulan</option>
+                        <option value="quarterly">Beberapa kali dalam 3 bulan</option>
+                        <option value="yearly">Beberapa kali setahun</option>
+                        <option value="rarely">Jarang</option>
+                    </select>
+                </div>
+                
+                <div class="demographic">
+                    <label for="email">Email (opsional)</label>
+                    <input type="text" id="email" name="email" placeholder="Masukkan email Anda jika ingin menerima informasi terbaru">
+                </div>
+            </div>
+            
+            <button type="submit">Kirim Survei</button>
+        </form>
+        
+        <div id="thankYou" class="thank-you">
+            <h2>Terima Kasih!</h2>
+            <p>Terima kasih telah meluangkan waktu untuk mengisi survei ini. Masukan Anda sangat berharga bagi kami untuk terus meningkatkan layanan Access KAI.</p>
+            <p>Semoga perjalanan Anda bersama KAI selalu menyenangkan!</p>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 PT Kereta Api Indonesia (Persero). Hak Cipta Dilindungi.</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const surveyData = {};
+            
+            for (const [key, value] of formData.entries()) {
+                surveyData[key] = value;
+            }
+            
+            // Send data to server
+            fetch('http://localhost:3000/api/responses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(surveyData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                
+                // Also store in localStorage as backup
+                const existingData = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
+                existingData.push({
+                    id: data.id,
+                    timestamp: data.timestamp,
+                    data: surveyData
+                });
+                localStorage.setItem('surveyResponses', JSON.stringify(existingData));
+                
+                // Show thank you message
+                document.getElementById('surveyForm').style.display = 'none';
+                document.getElementById('thankYou').style.display = 'block';
+                
+                // Scroll to thank you message
+                document.getElementById('thankYou').scrollIntoView({behavior: 'smooth'});
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengirim data. Silakan coba lagi.');
+            });
+        });
+        
+        // Function to export survey data to CSV
+        function exportToCSV() {
+            const surveyResponses = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
+            if (surveyResponses.length === 0) {
+                alert('Belum ada data survei yang tersimpan');
+                return;
+            }
+            
+            // Get all possible headers from all responses
+            const headers = new Set();
+            surveyResponses.forEach(response => {
+                Object.keys(response.data).forEach(key => headers.add(key));
+            });
+            
+            // Create CSV header row
+            let csvContent = 'ID,Timestamp,' + Array.from(headers).join(',') + '\n';
+            
+            // Add data rows
+            surveyResponses.forEach(response => {
+                let row = [response.id, response.timestamp];
+                headers.forEach(header => {
+                    row.push(response.data[header] || '');
+                });
+                csvContent += row.join(',') + '\n';
+            });
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'survey_responses.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Add admin functionality (only accessible via console for demo)
+        window.adminViewResponses = function() {
+            const surveyResponses = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
+            console.table(surveyResponses.map(r => r.data));
+            return surveyResponses;
+        };
+        
+        window.adminExportData = exportToCSV;
+    </script>
+</body>
+</html>

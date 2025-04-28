@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Survei Pengalaman Pengguna Access KAI</title>
+    <style>
+        :root {
+            --primary: #0066b2;
+            --primary-dark: #00549e;
+            --secondary: #f37021;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #e63946;
+            --gray: #6c757d;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        header:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--secondary);
+        }
+        
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .logo {
+            width: 120px;
+            margin-bottom: 15px;
+        }
+        
+        .admin-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .admin-panel h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        button.secondary {
+            background-color: var(--secondary);
+        }
+        
+        button.secondary:hover {
+            background-color: #d85a0a;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            color: var(--gray);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+        }
+        
+        .chart-container {
+            margin-top: 30px;
+            height: 300px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <img src="https://kai.id/static/images/logo.png" alt="Logo KAI" class="logo">
+            <h1>Admin Panel - Survei Pengalaman Pengguna Access KAI</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="admin-panel">
+            <h2>Dashboard</h2>
+            
+            <div class="action-buttons">
+                <button id="refreshData">Refresh Data</button>
+                <button id="exportCSV" class="secondary">Export ke CSV</button>
+                <button id="clearData" class="secondary">Hapus Semua Data</button>
+                <a href="index.html" style="text-decoration: none;">
+                    <button style="background-color: var(--gray);">Kembali ke Survei</button>
+                </a>
+            </div>
+            
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <h3>Total Responden</h3>
+                    <div id="totalResponses" class="value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Rata-rata Kepuasan</h3>
+                    <div id="avgHappiness" class="value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Rata-rata Keterlibatan</h3>
+                    <div id="avgEngagement" class="value">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Rata-rata Keberhasilan Tugas</h3>
+                    <div id="avgTaskSuccess" class="value">0</div>
+                </div>
+            </div>
+            
+            <h2>Data Responden</h2>
+            <div id="responseTable">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Waktu</th>
+                            <th>Usia</th>
+                            <th>Jenis Kelamin</th>
+                            <th>Frekuensi Penggunaan</th>
+                            <th>Rata-rata Skor</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="responseData">
+                        <!-- Data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="noData" class="no-data">
+                <p>Belum ada data survei yang tersimpan</p>
+            </div>
+            
+            <div class="pagination">
+                <button id="prevPage" disabled>Sebelumnya</button>
+                <button id="nextPage" disabled>Selanjutnya</button>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 PT Kereta Api Indonesia (Persero). Hak Cipta Dilindungi.</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Variables for pagination
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let allResponses = [];
+        
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            
+            // Add event listeners
+            document.getElementById('refreshData').addEventListener('click', loadData);
+            document.getElementById('exportCSV').addEventListener('click', exportToCSV);
+            document.getElementById('clearData').addEventListener('click', clearData);
+            document.getElementById('prevPage').addEventListener('click', () => changePage(-1));
+            document.getElementById('nextPage').addEventListener('click', () => changePage(1));
+        });
+        
+        // Load survey data from server
+        function loadData() {
+            fetch('http://localhost:3000/api/responses')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    allResponses = data;
+                    // Also update localStorage as backup
+                    localStorage.setItem('surveyResponses', JSON.stringify(allResponses));
+                    updateStats();
+                    renderTable();
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    // Fallback to localStorage if server is unavailable
+                    allResponses = JSON.parse(localStorage.getItem('surveyResponses') || '[]');
+                    updateStats();
+                    renderTable();
+                    alert('Gagal mengambil data dari server. Menampilkan data lokal.');
+                });
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const totalResponses = allResponses.length;
+            document.getElementById('totalResponses').textContent = totalResponses;
+            
+            if (totalResponses === 0) {
+                document.getElementById('avgHappiness').textContent = '0';
+                document.getElementById('avgEngagement').textContent = '0';
+                document.getElementById('avgTaskSuccess').textContent = '0';
+                document.getElementById('responseTable').style.display = 'none';
+                document.getElementById('noData').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('responseTable').style.display = 'block';
+            document.getElementById('noData').style.display = 'none';
+            
+            // Calculate averages
+            let totalHappiness = 0;
+            let totalEngagement = 0;
+            let totalTaskSuccess = 0;
+            
+            allResponses.forEach(response => {
+                const data = response.data;
+                
+                // Happiness (questions 1-2)
+                const happiness1 = parseInt(data.happiness_1) || 0;
+                const happiness2 = parseInt(data.happiness_2) || 0;
+                const happinessAvg = (happiness1 + happiness2) / 2;
+                totalHappiness += happinessAvg;
+                
+                // Engagement (questions 3-4)
+                const engagement1 = parseInt(data.engagement_1) || 0;
+                const engagement2 = parseInt(data.engagement_2) || 0;
+                const engagementAvg = (engagement1 + engagement2) / 2;
+                totalEngagement += engagementAvg;
+                
+                // Task Success (questions 9-10)
+                const task1 = parseInt(data.task_1) || 0;
+                const task2 = parseInt(data.task_2) || 0;
+                const taskAvg = (task1 + task2) / 2;
+                totalTaskSuccess += taskAvg;
+            });
+            
+            document.getElementById('avgHappiness').textContent = (totalHappiness / totalResponses).toFixed(1);
+            document.getElementById('avgEngagement').textContent = (totalEngagement / totalResponses).toFixed(1);
+            document.getElementById('avgTaskSuccess').textContent = (totalTaskSuccess / totalResponses).toFixed(1);
+        }
+        
+        // Render table with pagination
+        function renderTable() {
+            const tbody = document.getElementById('responseData');
+            tbody.innerHTML = '';
+            
+            // Calculate pagination
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, allResponses.length);
+            const paginatedData = allResponses.slice(startIndex, endIndex);
+            
+            // Update pagination buttons
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = endIndex >= allResponses.length;
+            
+            // Render table rows
+            paginatedData.forEach(response => {
+                const data = response.data;
+                const row = document.createElement('tr');
+                
+                // Calculate average score across all questions
+                const questionKeys = [
+                    'happiness_1', 'happiness_2', 
+                    'engagement_1', 'engagement_2', 
+                    'adoption_1', 'adoption_2', 
+                    'retention_1', 'retention_2', 
+                    'task_1', 'task_2'
+                ];
+                
+                let totalScore = 0;
+                let answeredQuestions = 0;
+                
+                questionKeys.forEach(key => {
+                    if (data[key]) {
+                        totalScore += parseInt(data[key]);
+                        answeredQuestions++;
+                    }
+                });
+                
+                const avgScore = answeredQuestions > 0 ? (totalScore / answeredQuestions).toFixed(1) : 'N/A';
+                
+                // Format date
+                const date = new Date(response.timestamp);
+                const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+                
+                row.innerHTML = `
+                    <td>${response.id}</td>
+                    <td>${formattedDate}</td>
+                    <td>${data.age || 'N/A'}</td>
+                    <td>${getGenderText(data.gender)}</td>
+                    <td>${getFrequencyText(data.frequency)}</td>
+                    <td>${avgScore}</td>
+                    <td>
+                        <button onclick="viewDetails(${response.id})" style="padding: 5px 10px; font-size: 0.9rem;">Detail</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+        
+        // Change page for pagination
+        function changePage(direction) {
+            currentPage += direction;
+            renderTable();
+        }
+        
+        // View details of a specific response
+        function viewDetails(id) {
+            const response = allResponses.find(r => r.id === id);
+            if (!response) return;
+            
+            alert(JSON.stringify(response.data, null, 2));
+            // In a real application, you would show this in a modal
+        }
+        
+        // Export data to CSV
+        function exportToCSV() {
+            if (allResponses.length === 0) {
+                alert('Belum ada data survei yang tersimpan');
+                return;
+            }
+            
+            // Get all possible headers from all responses
+            const headers = new Set();
+            allResponses.forEach(response => {
+                Object.keys(response.data).forEach(key => headers.add(key));
+            });
+            
+            // Create CSV header row
+            let csvContent = 'ID,Timestamp,' + Array.from(headers).join(',') + '\n';
+            
+            // Add data rows
+            allResponses.forEach(response => {
+                let row = [response.id, response.timestamp];
+                headers.forEach(header => {
+                    row.push(response.data[header] || '');
+                });
+                csvContent += row.join(',') + '\n';
+            });
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'survey_responses.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Clear all data
+        function clearData() {
+            if (confirm('Apakah Anda yakin ingin menghapus semua data survei? Tindakan ini tidak dapat dibatalkan.')) {
+                fetch('http://localhost:3000/api/responses', {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    localStorage.removeItem('surveyResponses');
+                    allResponses = [];
+                    updateStats();
+                    renderTable();
+                    alert('Semua data survei telah dihapus');
+                })
+                .catch(error => {
+                    console.error('Error deleting data:', error);
+                    alert('Gagal menghapus data dari server. Silakan coba lagi.');
+                });
+            }
+        }
+        
+        // Helper functions for text display
+        function getGenderText(gender) {
+            const genderMap = {
+                'male': 'Laki-laki',
+                'female': 'Perempuan',
+                'other': 'Lainnya',
+                'prefer_not_to_say': 'Tidak menjawab'
+            };
+            return genderMap[gender] || gender || 'N/A';
+        }
+        
+        function getFrequencyText(frequency) {
+            const frequencyMap = {
+                'daily': 'Setiap hari',
+                'weekly': 'Beberapa kali seminggu',
+                'monthly': 'Beberapa kali sebulan',
+                'quarterly': 'Beberapa kali dalam 3 bulan',
+                'yearly': 'Beberapa kali setahun',
+                'rarely': 'Jarang'
+            };
+            return frequencyMap[frequency] || frequency || 'N/A';
+        }
+    </script>
+</body>
+</html>
